@@ -3,6 +3,7 @@ import { Box, Button, Card, CardActions, CardContent, CardMedia, Typography } fr
 import InfoIcon from '@mui/icons-material/Info'
 
 export default function AddressedCard({ badges }) {
+  console.log({ currentBadge: badges })
   return (
     <>
       <Box

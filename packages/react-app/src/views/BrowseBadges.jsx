@@ -195,6 +195,10 @@ export default function BrowseBadges({
     }
   }
 
+  function checkeventBagesAndBadges(badges) {
+    return badges && badges.length > 0
+  }
+
   return (
     <>
       <Box sx={{ paddingTop: '76px' }}>

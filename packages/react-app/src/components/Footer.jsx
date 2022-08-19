@@ -4,6 +4,7 @@ import EmailIcon from '@mui/icons-material/Email'
 import Logo from './Logo'
 import GitHubIcon from '@mui/icons-material/GitHub'
 import TwitterIcon from '@mui/icons-material/Twitter'
+import LinkedInIcon from '@mui/icons-material/LinkedIn'
 
 const footerCategories = {
   PRODUCTS: ['Online IDE', 'Desktop App', 'Ethereum Remix', 'RemixD'],
@@ -37,6 +38,7 @@ function Footer() {
           <EmailIcon sx={{ color: '#4F4F4F' }} />
           <GitHubIcon sx={{ color: '#4F4F4F' }} />
           <TwitterIcon sx={{ color: '#4f4f4f' }} />
+          <LinkedInIcon sx={{ color: '#4f4f4f' }} />
         </Box>
       </Box>
       <Box

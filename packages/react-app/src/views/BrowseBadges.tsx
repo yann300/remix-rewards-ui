@@ -220,16 +220,16 @@ export default function BrowseBadges() {
               Remix Project rewards contributors, beta testers, and UX research participants with NFTs deployed on
               Optimism.
               <br />
-              Remix Reward holders are able to mint a second “Remixer” user NFT badge to give to any other user of their
+              Remix Reward holders are able to mint a second “Remixer” user NFT badge to any wallet address of their
               choice.
               <br />
               This feature is a way to reward Remix contributors to help grow our user base into a larger and more
               genuine open source community of practice.
             </Typography>
             <Typography variant="inherit" fontWeight={500} sx={{ color: '#333333' }}>
-              Remix Rewards are currently not transferable. This feature leaves open the possibility of granting holders
+              Remix Rewards are currently not transferable. This feature leaves open the future possibility of granting holders
               proportional voting power to help the community decide on new features for the IDE and/or other issues
-              governing the development of the Remix toolset at some point in the future.
+              governing the development of the Remix toolset.
             </Typography>
           </Box>
           <Box></Box>

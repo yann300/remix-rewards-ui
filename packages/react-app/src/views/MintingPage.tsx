@@ -34,8 +34,8 @@ export default function MintingPage() {
           <Typography variant="inherit" fontWeight={500} mb={3} sx={{ color: '#333333' }}>
             Remix project rewards contributors, beta testers and UX research participants with NFTs deployed on
             Optimism. <br />
-            For every Remix Reward you have received, you are able to mint one additional "Remixer" badge to a different
-            wallet of your choice. <br />
+            For every Remix Reward you receive, you are able to mint one additional "Remixer" badge to a
+            wallet account of your choice. <br />
             See below for the number of "Remixer" badge mints you have remaining on your account. <br />
             To mint a new "Remixer" badge, input a unique wallet address below.
           </Typography>
@@ -46,7 +46,7 @@ export default function MintingPage() {
             sx={{ color: '#333333', zIndex: 999 }}
             component={'span'}
           >
-            Minting each "Remixer" badge will require a very small amount of ETH (0.15 DAI) on the Optimism network.{' '}
+            Minting each "Remixer" badge will require a very small amount of ETH (0.15 - .60 USD) on the Optimism network.{' '}
             <br /> If you do not have ETH on Optimism, you can transfer some from Mainnet using the{' '}
             <a href="https://app.optimism.io/bridge">Optimism Bridge</a> or{' '}
             <a href="https://app.hop.exchange/#/send?sourceNetwork=optimism&destNetwork=ethereum&token=ETH">

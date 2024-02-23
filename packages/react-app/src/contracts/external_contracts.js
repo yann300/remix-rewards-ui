@@ -1616,6 +1616,16 @@ module.exports = {
     provider: 'https://opt-mainnet.g.alchemy.com/v2/cdGnPX6sQLXv-YWkbzYAXnTVVfuL8fhb',
     etherscan: 'https://optimistic.etherscan.io/tx/'
   },
+  534352: {
+    contracts: {      
+      REMIX_REWARD: {
+        address: "0x2bC16Bf30435fd9B3A3E73Eb759176C77c28308D",
+        abi: remixRewardAbi
+      }
+    },
+    provider: 'https://scroll-mainnet.chainstacklabs.com',
+    etherscan: 'https://scrollscan.com/tx/'
+  },
   5: {
     contracts: {
       REMIX_REWARD: {

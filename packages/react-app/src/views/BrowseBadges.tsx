@@ -47,7 +47,8 @@ export default function BrowseBadges() {
   const [groupedBadges, setPagedGroupedBadges] = useState<RewardGroups>({})
   const [error, setErrorMessage] = useState('')
   const [showSpinner, setShowSpinner] = useState(false)
-  const { localProvider, mainnet, address, setAddress, injectedProvider, selectedChainId, checkForWeb3Provider } =
+  const [selectedChainId, setSelectedChainId] = useState(10)
+  const { localProvider, mainnet, address, setAddress, injectedProvider, checkForWeb3Provider } =
     useContext(BadgeContext)
 
   let contractRef
@@ -234,6 +235,16 @@ export default function BrowseBadges() {
           </Box>
           <Box></Box>
         </Box>
+        <button className='MuiTypography-root MuiTypography-button' onClick={() => {
+          setBadges([])
+          setShowSpinner(true)
+          setSelectedChainId(10)
+        }}>see on Optimism</button>
+        <button className='MuiTypography-root MuiTypography-button' onClick={() => {
+          setBadges([])
+          setShowSpinner(true)
+          setSelectedChainId(534352)
+        }}>see on Scroll</button>
         <Box mt={8}>
           <Typography variant={'h6'} fontWeight={700} fontFamily={'Noah'} mb={3} sx={{ color: '#333333' }}>
             Input a wallet address to see the Remix Rewards it holds:

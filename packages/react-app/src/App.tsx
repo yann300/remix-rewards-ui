@@ -98,7 +98,7 @@ function App() {
 
   return (
     <div className="App">
-      <BadgeContext.Provider value={contextPayload}>
+      <BadgeContext.Provider value={contextPayload}>      
         <Layout tabValue={tabValue} setTabValue={setTabValue}>
           {loaded && tabValue === 0 && <BrowseBadges />}
 

@@ -64,6 +64,38 @@ export async function switchNetworkChain(selectedChainId) {
     await switchToGoerli(correctHexChainId)
     return
   }
+  if (selectedChainId === 534352) {
+    await switchToScroll(correctHexChainId)
+    return
+  }
+}
+
+export async function switchToScroll(correctHexChainId) {
+  console.log({ correctHexChainId })
+  try {
+    await window.ethereum.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: correctHexChainId }],
+    })
+  } catch (switchError) {
+    console.log({ switchError })
+    try {
+      await window.ethereum.request({
+        method: 'wallet_addEthereumChain',
+        params: [
+          {
+            chainId: correctHexChainId,
+            chainName: externalParams[1].testchainName,
+            rpcUrls: [...externalParams[1].testrpcUrls],
+          },
+        ],
+      })
+      await window.ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: correctHexChainId }],
+      })
+    } catch (addError) {}
+  }
 }
 
 export async function switchToGoerli(correctHexChainId) {

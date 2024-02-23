@@ -15,7 +15,7 @@ export async function getAllRewards(contractAddress, provider) {
         {
           address: '' + contractAddress + '',
           topics: ['0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'],
-          fromBlock: '0x58B5AB',
+          fromBlock: '0x0',
         },
       ],
       id: 0,
@@ -23,6 +23,7 @@ export async function getAllRewards(contractAddress, provider) {
   })
   result = await result.json()
   // @ts-ignore
+  console.log('reward', result, contractAddress, provider)
   return result.result.reverse()
 }
 

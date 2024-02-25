@@ -11,31 +11,19 @@ const chainsAddresses = {
 
 const cache = {}
 
-let globalCache
-
 export async function getTokenData(chainId, id) {
     id = parseInt(id)
-    if (!globalCache) {
-        globalCache = await fetch(`https://remix-reward-api.vercel.app/cache`)
-        globalCache = await globalCache.json()
-    }
-
-    let result
+   let result
     if (cache[chainId + ' ' + id]) {
         result = cache[chainId + ' ' + id]
     }
     
-    const chainName = chains[chainId]
-    const address = chainsAddresses[chainName]
-    if (!result && globalCache[address + '_' + id]) {
-        result = globalCache[address + '_' + id]
-        console.log('using server cache')
-    }
     
     if (!result) {
         try {
-            console.log('getTokenData', result)
+            console.log('getTokenData', id)
             result = await fetch(`https://remix-reward-api.vercel.app/api-${chains[chainId]}/${id}`)
+            console.log('getTokenData response', id)
             result = await result.json()
             cache[chainId + ' ' + id] = result
         } catch (e) {

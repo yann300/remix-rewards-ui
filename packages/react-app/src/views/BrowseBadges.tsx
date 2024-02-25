@@ -67,10 +67,12 @@ export default function BrowseBadges() {
     providerRef = externalContracts[selectedChainId].provider
     etherscanRef = externalContracts[selectedChainId].etherscan
   }
-  const contract = useRef(new ethers.Contract(contractRef.address, contractRef.abi, localProvider))
+  const contract = useRef(new ethers.Contract(contractRef.address, contractRef.abi, injectedProvider))
 
   useEffect(() => {
     const run = async () => {
+      contract.current = new ethers.Contract(contractRef.address, contractRef.abi, injectedProvider)
+
       if (!contractRef) {
         setErrorMessage('chain not supported. ' + selectedChainId)
         return
@@ -102,8 +104,8 @@ export default function BrowseBadges() {
               const found = eventBadges.find(x => ethers.utils.hexStripZeros(x.id) === ethers.utils.hexStripZeros(tId))
               // eslint-disable-next-line no-undef
               const badge = Object.assign({}, { transactionHash: found.transactionHash }, data, {
-                decodedIpfsHash: toBase58(data.hash),
-                fileName: data.image
+                decodedIpfsHash: toBase58(data[2]),
+                fileName: data[3]
               })
               badges.push(badge)
             } catch (e) {
@@ -120,7 +122,7 @@ export default function BrowseBadges() {
           setErrorMessage('')
         } catch (e) {
           setShowSpinner(false)
-          setErrorMessage(e.message)
+          setErrorMessage("Please make sure your injected provider (metamask) is connected to the right network." + e.message)
         }
       } else {
         setErrorMessage('')
@@ -136,8 +138,8 @@ export default function BrowseBadges() {
               const found = eventBadges.find(x => ethers.utils.hexStripZeros(x.id) === ethers.utils.hexStripZeros(tId))
               // eslint-disable-next-line no-undef
               const badge = Object.assign({}, { transactionHash: found.transactionHash }, data, {
-                decodedIpfsHash: toBase58(data.hash),
-                fileName: data.image
+                decodedIpfsHash: toBase58(data[2]),
+                fileName: data[3]
               })
               badges.push(badge)
             } catch (e) {

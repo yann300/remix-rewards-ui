@@ -53,7 +53,7 @@ export default function NftCard(props: NftCardProps) {
       const name = await getEnsName(toFormatted)
       let title = name ? name : toFormatted
 
-      const src = data.image || '' // 'https://ipfs.io/ipfs/' + toBase58(data.hash)
+      const src = 'https://ipfs-cluster.ethdevops.io/ipfs/' + toBase58(data.hash) // data.image || '' // 'https://ipfs.io/ipfs/' + toBase58(data.hash)
       const txLink = etherscan + transactionHash
       setState({ data, title, src, txLink })
     } catch (error) {

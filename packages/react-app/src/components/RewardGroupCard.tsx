@@ -45,7 +45,7 @@ export default function RewardGroupCard(props: any) {
       const title = props.event[0].tokenType
       const tokenType = props.event[0].tokenType
       const payload = props.event[0].payload
-      const src = props.event[0].fileName || 'https://ipfs.io/ipfs/' + toBase58(props.event[0].hash)
+      const src = 'https://ipfs-cluster.ethdevops.io/ipfs/' + toBase58(props.event[0].hash) // props.event[0].fileName || 'https://ipfs.io/ipfs/' + toBase58(props.event[0].hash)
 
       const rewardCount = props.event.length
       setState({ title, src, rewardCount, tokenType, payload })

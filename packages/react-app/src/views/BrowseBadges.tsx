@@ -6,6 +6,8 @@ import { Badge, EventBadge, RewardGroups } from '../types/rewardTypes'
 
 import { ethers } from 'ethers'
 import InputLabel from '@mui/material/InputLabel'
+import ToggleButton from '@mui/material/ToggleButton'
+import ToggleButtonGroup from '@mui/material/ButtonGroup'
 import SearchIcon from '@mui/icons-material/Search'
 import IconButton from '@mui/material/IconButton'
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft'
@@ -17,6 +19,7 @@ import { FormControl } from '@mui/material'
 import { useContext } from 'react'
 import { BadgeContext } from '../contexts/BadgeContext'
 import BadgesPaginatedSection from '../components/BadgesPaginatedSection'
+import { getTokenData, getEnsName } from '../helpers/getTokenData'
 
 export const toHex = ipfsHash => {
   let buf = multihash.fromB58String(ipfsHash)
@@ -24,6 +27,7 @@ export const toHex = ipfsHash => {
 }
 
 export const toBase58 = contentHash => {
+  if (!contentHash) return ''
   let hex = contentHash.substring(2)
   let buf = multihash.fromHexString(hex)
   return multihash.toB58String(buf)
@@ -47,7 +51,8 @@ export default function BrowseBadges() {
   const [groupedBadges, setPagedGroupedBadges] = useState<RewardGroups>({})
   const [error, setErrorMessage] = useState('')
   const [showSpinner, setShowSpinner] = useState(false)
-  const { localProvider, mainnet, address, setAddress, injectedProvider, selectedChainId, checkForWeb3Provider } =
+  const [selectedChainId, setSelectedChainId] = useState(10)
+  const { localProvider, mainnet, address, setAddress, injectedProvider, checkForWeb3Provider } =
     useContext(BadgeContext)
 
   let contractRef
@@ -62,10 +67,12 @@ export default function BrowseBadges() {
     providerRef = externalContracts[selectedChainId].provider
     etherscanRef = externalContracts[selectedChainId].etherscan
   }
-  const contract = useRef(new ethers.Contract(contractRef.address, contractRef.abi, localProvider))
+  const contract = useRef(new ethers.Contract(contractRef.address, contractRef.abi, injectedProvider))
 
   useEffect(() => {
     const run = async () => {
+      contract.current = new ethers.Contract(contractRef.address, contractRef.abi, injectedProvider)
+
       if (!contractRef) {
         setErrorMessage('chain not supported. ' + selectedChainId)
         return
@@ -92,12 +99,13 @@ export default function BrowseBadges() {
             try {
               const tokenId = await contract.current.tokenOfOwnerByIndex(resolvedAddress, k)
               const tId = tokenId.toHexString()
-              let data = await contract.current.tokensData(tokenId)
+              let data = await getTokenData(selectedChainId, tokenId)
 
               const found = eventBadges.find(x => ethers.utils.hexStripZeros(x.id) === ethers.utils.hexStripZeros(tId))
               // eslint-disable-next-line no-undef
               const badge = Object.assign({}, { transactionHash: found.transactionHash }, data, {
-                decodedIpfsHash: toBase58(data.hash),
+                decodedIpfsHash: toBase58(data[2]),
+                fileName: data[3]
               })
               badges.push(badge)
             } catch (e) {
@@ -114,7 +122,7 @@ export default function BrowseBadges() {
           setErrorMessage('')
         } catch (e) {
           setShowSpinner(false)
-          setErrorMessage(e.message)
+          setErrorMessage("Please make sure your injected provider (metamask) is connected to the right network." + e.message)
         }
       } else {
         setErrorMessage('')
@@ -125,12 +133,13 @@ export default function BrowseBadges() {
             try {
               const tokenId = await contract.current.tokenOfOwnerByIndex(address, k)
               const tId = tokenId.toHexString()
-              let data = await contract.current.tokensData(tokenId)
+              let data = await getTokenData(selectedChainId, tokenId)
 
               const found = eventBadges.find(x => ethers.utils.hexStripZeros(x.id) === ethers.utils.hexStripZeros(tId))
               // eslint-disable-next-line no-undef
               const badge = Object.assign({}, { transactionHash: found.transactionHash }, data, {
-                decodedIpfsHash: toBase58(data.hash),
+                decodedIpfsHash: toBase58(data[2]),
+                fileName: data[3]
               })
               badges.push(badge)
             } catch (e) {
@@ -155,6 +164,7 @@ export default function BrowseBadges() {
   }, [address, contractRef, eventBadges, localProvider, mainnet, selectedChainId])
 
   const run = useCallback(async () => {
+    setShowSpinner(true)
     if (address) {
       setEventBadges([])
       return
@@ -175,19 +185,18 @@ export default function BrowseBadges() {
       }
       let temp = { ...badge }
 
-      let data = await contract.current.tokensData(badge.id)
-      temp.resolvedName = await mainnet.lookupAddress(temp.to)
+      let data = await getTokenData(selectedChainId, badge.id)
+      temp.resolvedName = await getEnsName(temp.to)
       dataArray.push(data)
-
       temp.payload = data[0]
       temp.tokenType = data[1]
       temp.hash = data[2]
+      temp.fileName = data[3]
 
       return temp
     }) // array of Promises
     let unwrapResult = []
     unwrapResult = await unwrap(result) // Unwrap Promises
-
     const effectResult = unwrapResult.reduce((reducedCopy, badge) => {
       let tempCopy = reducedCopy[`${badge.tokenType} ${badge.payload}`] || []
       tempCopy.push(badge)
@@ -196,6 +205,7 @@ export default function BrowseBadges() {
     }, {})
     console.log({ effectResult })
     setEventBadges(badges)
+    setShowSpinner(false)
     setPagedGroupedBadges(effectResult)
   }, [address, contractRef.address, mainnet, providerRef])
 
@@ -234,6 +244,23 @@ export default function BrowseBadges() {
           </Box>
           <Box></Box>
         </Box>
+        <ToggleButtonGroup
+        color="primary"
+        value={'horizontal'}
+        aria-label="Platform"
+        selected={true}
+      >
+      <ToggleButton className='MuiTypography-root MuiTypography-button' value='optimism' onClick={() => {
+                setBadges([])
+                setShowSpinner(true)
+                setSelectedChainId(10)
+              }}>see on Optimism</ToggleButton>
+              <ToggleButton className='MuiTypography-root MuiTypography-button' value='scroll' onClick={() => {
+                setBadges([])
+                setShowSpinner(true)
+                setSelectedChainId(534352)
+              }}>see on Scroll</ToggleButton>
+      </ToggleButtonGroup>        
         <Box mt={8}>
           <Typography variant={'h6'} fontWeight={700} fontFamily={'Noah'} mb={3} sx={{ color: '#333333' }}>
             Input a wallet address to see the Remix Rewards it holds:
@@ -262,7 +289,7 @@ export default function BrowseBadges() {
                 }
               />
             </FormControl>
-            {address.length > 3 && badges.length === 0 && showSpinner ? (
+            {badges.length === 0 && showSpinner ? (
               <CircularProgress color="secondary" sx={{ marginLeft: 5 }} />
             ) : null}
           </Box>

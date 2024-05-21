@@ -62,12 +62,14 @@ export interface NftCardProps {
   transactionHash: string
   contract: any
   mainnet: any
+  chainId: number
 }
 
 export interface TokensData {
   payload: string
   tokenType: string
   hash: string
+  image?: string
 }
 
 export interface NavbarProps {

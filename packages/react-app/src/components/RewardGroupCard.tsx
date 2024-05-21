@@ -9,6 +9,7 @@ import MuiAlert, { AlertProps } from '@mui/material/Alert'
 import AccordionInnards from './AccordionInnards'
 
 export const toBase58 = (contentHash: any) => {
+  if (!contentHash) return ''
   let hex = contentHash.substring(2)
   let buf = multihash.fromHexString(hex)
   return multihash.toB58String(buf)
@@ -40,10 +41,11 @@ export default function RewardGroupCard(props: any) {
 
   const run = useCallback(async () => {
     try {
+      console.log('RewardGroupCard', props.event)
       const title = props.event[0].tokenType
       const tokenType = props.event[0].tokenType
       const payload = props.event[0].payload
-      const src = 'https://ipfs.io/ipfs/' + toBase58(props.event[0].hash)
+      const src = 'https://ipfs-cluster.ethdevops.io/ipfs/' + toBase58(props.event[0].hash) // props.event[0].fileName || 'https://ipfs.io/ipfs/' + toBase58(props.event[0].hash)
 
       const rewardCount = props.event.length
       setState({ title, src, rewardCount, tokenType, payload })
@@ -77,13 +79,9 @@ export default function RewardGroupCard(props: any) {
     >
       <Card variant={'outlined'} sx={{ borderRadius: 5, zIndex: 10 }}>
         {state.src.length < 55 ? (
-          <>
-            <Skeleton variant={'rectangular'} width={300} height={350}>
-              <CardMedia component={'img'} width={200} image={state.src} alt={'nftimage'} />
-            </Skeleton>
-          </>
+          <CardMedia component={'img'} width={200} image={state.src} alt={'Remixer NFT'} />
         ) : state.tokenType === 'Remixer' ? (
-          <CardMedia component={'img'} width={200} height={360} image={state.src} alt={'Remixer NFT'} />
+          <CardMedia component={'img'} width={200} image={state.src} alt={'Remixer NFT'} />
         ) : (
           <CardMedia component={'img'} width={200} image={state.src} alt={'nftimage'} />
         )}

@@ -10,8 +10,10 @@ import Snackbar from '@mui/material/Snackbar'
 import MuiAlert, { AlertProps } from '@mui/material/Alert'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { NftCardProps, TokensData } from '../types/rewardTypes'
+import { getTokenData, getEnsName } from '../helpers/getTokenData'
 
 export const toBase58 = (contentHash: any) => {
+  if (!contentHash) return ''
   let hex = contentHash.substring(2)
   let buf = multihash.fromHexString(hex)
   return multihash.toB58String(buf)
@@ -46,12 +48,12 @@ export default function NftCard(props: NftCardProps) {
   }
   const run = useCallback(async () => {
     try {
-      let data: TokensData = await contract.tokensData(ethers.BigNumber.from(id === '0x' ? '0x0' : id))
+      let data: TokensData = await getTokenData(props.chainId, ethers.BigNumber.from(id === '0x' ? '0x0' : id))
       let toFormatted = ethers.utils.hexZeroPad(ethers.utils.hexStripZeros(to), 20)
-      const name = await mainnet.lookupAddress(toFormatted)
+      const name = await getEnsName(toFormatted)
       let title = name ? name : toFormatted
 
-      const src = 'https://ipfs.io/ipfs/' + toBase58(data.hash)
+      const src = 'https://ipfs-cluster.ethdevops.io/ipfs/' + toBase58(data.hash) // data.image || '' // 'https://ipfs.io/ipfs/' + toBase58(data.hash)
       const txLink = etherscan + transactionHash
       setState({ data, title, src, txLink })
     } catch (error) {
@@ -83,13 +85,9 @@ export default function NftCard(props: NftCardProps) {
       >
         <Card variant={'outlined'} sx={{ borderRadius: 5, zIndex: 10 }}>
           {state.src.length < 55 ? (
-            <>
-              <Skeleton variant={'rectangular'} width={300} height={350}>
-                <CardMedia component={'img'} width={200} image={state.src} alt={'nftimage'} />
-              </Skeleton>
-            </>
+            <CardMedia component={'img'} width={200} height={360} image={state.src} alt={'Remixer test NFT'} />
           ) : state.data.tokenType === 'Remixer' ? (
-            <CardMedia component={'img'} width={200} height={360} image={state.src} alt={'Remixer NFT'} />
+            <CardMedia component={'img'} width={200} height={360} image={state.src} alt={'Remixer NFT test'} />
           ) : (
             <CardMedia component={'img'} width={200} image={state.src} alt={'nftimage'} />
           )}

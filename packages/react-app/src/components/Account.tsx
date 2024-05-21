@@ -189,7 +189,7 @@ export default function Account({ minimized }: AccountsProps) {
     const chainInfo = await getCurrentChainId()
     const { chainId } = chainInfo[0]
     console.log({ chainId })
-    if (chainId !== selectedChainId) {
+    if (chainId !== 5 && chainId !== 534352) {
       setShowWrongNetworkToast(true)
       await switchNetworkChain(selectedChainId)
       accounts = await (window.ethereum as any).request({
@@ -199,7 +199,7 @@ export default function Account({ minimized }: AccountsProps) {
       setNetInfo(chainInfo)
       return
     }
-    if (chainId === selectedChainId) {
+    if (chainId !== 5 || chainId !== 534352) {
       accounts = await (window.ethereum as any).request({
         method: 'eth_requestAccounts',
       })
